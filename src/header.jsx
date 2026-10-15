@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Cross,
   ArrowRight,
@@ -8,26 +8,110 @@ import {
   LockKeyhole,
   Mail,
   Building2,
+  LogOut,
 } from "lucide-react";
 import "./Header.css";
 
+const API_URL = "http://localhost:5000/api";
+
 export default function Header() {
+  const navigate = useNavigate();
+
   const [modal, setModal] = useState(null);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [accountType, setAccountType] = useState("user");
+
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("pharmaUser")) || null;
+    } catch {
+      return null;
+    }
+  });
 
   function openModal(type) {
     setModal(type);
     setMessage("");
+    setAccountType("user");
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setMessage("");
 
-    setMessage(
-      modal === "login"
-        ? "Login submitted. Backend authentication is not connected yet."
-        : "Signup submitted. Backend registration is not connected yet."
-    );
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    if (modal === "signup" && accountType === "pharmacy") {
+      setModal(null);
+      navigate("/register-pharmacy");
+      return;
+    }
+
+    const payload = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
+
+    const endpoint =
+      modal === "signup" ? "/auth/register" : "/auth/login";
+
+    if (modal === "signup") {
+      payload.name = formData.get("name");
+    } else {
+      payload.role = accountType;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMessage(data.message || "Something went wrong.");
+        return;
+      }
+
+      localStorage.setItem("pharmaToken", data.token);
+      localStorage.setItem("pharmaUser", JSON.stringify(data.user));
+
+      setCurrentUser(data.user);
+      setModal(null);
+      setMessage("");
+
+      if (data.user.role === "pharmacy") {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+      setMessage(
+        "Cannot connect to the backend. Make sure the server is running."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("pharmaToken");
+    localStorage.removeItem("pharmaUser");
+
+    setCurrentUser(null);
+    setModal(null);
+    setMessage("");
+
+    navigate("/");
   }
 
   return (
@@ -48,34 +132,65 @@ export default function Header() {
           <Link className="nav-current" to="/">
             Home
           </Link>
+
           <Link to="/#results">Find medicines</Link>
           <Link to="/#how-it-works">How it works</Link>
         </nav>
 
         <div className="user-header-actions">
-          <Link
-            to="/register-pharmacy"
-            className="register-pharmacy-button"
-          >
-            <Building2 size={17} />
-            Register Pharmacy
-          </Link>
+          {currentUser?.role === "pharmacy" ? (
+            <Link
+              to="/dashboard"
+              className="register-pharmacy-button"
+            >
+              <Building2 size={17} />
+              Dashboard
+            </Link>
+          ) : !currentUser ? (
+            <Link
+              to="/register-pharmacy"
+              className="register-pharmacy-button"
+            >
+              <Building2 size={17} />
+              Register Pharmacy
+            </Link>
+          ) : null}
 
-          <button
-            className="user-login-button"
-            type="button"
-            onClick={() => openModal("login")}
-          >
-            Login
-          </button>
+          {currentUser ? (
+            <>
+              <span className="header-user-name">
+                <UserRound size={17} />
+                {currentUser.name}
+              </span>
 
-          <button
-            className="user-signup-button"
-            type="button"
-            onClick={() => openModal("signup")}
-          >
-            Sign up <ArrowRight size={16} />
-          </button>
+              <button
+                className="user-login-button"
+                type="button"
+                onClick={handleLogout}
+              >
+                <LogOut size={16} />
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="user-login-button"
+                type="button"
+                onClick={() => openModal("login")}
+              >
+                Login
+              </button>
+
+              <button
+                className="user-signup-button"
+                type="button"
+                onClick={() => openModal("signup")}
+              >
+                Sign up <ArrowRight size={16} />
+              </button>
+            </>
+          )}
         </div>
       </header>
 
@@ -84,7 +199,7 @@ export default function Header() {
           className="auth-modal-backdrop"
           role="presentation"
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
+            if (event.target === event.currentTarget && !loading) {
               setModal(null);
             }
           }}
@@ -98,8 +213,9 @@ export default function Header() {
             <button
               type="button"
               className="auth-modal-close"
-              onClick={() => setModal(null)}
+              onClick={() => !loading && setModal(null)}
               aria-label="Close form"
+              disabled={loading}
             >
               <X size={21} />
             </button>
@@ -120,8 +236,8 @@ export default function Header() {
 
             <p className="auth-description">
               {modal === "login"
-                ? "Log in to manage your medicine searches and reservations."
-                : "Sign up to save your searches and manage medicine reservations."}
+                ? "Log in to access your Pharma account."
+                : "Create an account to save searches and manage reservations."}
             </p>
 
             <div className="auth-mode-switch">
@@ -152,6 +268,7 @@ export default function Header() {
                       name="name"
                       type="text"
                       placeholder="Enter your full name"
+                      autoComplete="name"
                       required
                     />
                   </span>
@@ -166,6 +283,7 @@ export default function Header() {
                     name="email"
                     type="email"
                     placeholder="you@example.com"
+                    autoComplete="email"
                     required
                   />
                 </span>
@@ -180,34 +298,48 @@ export default function Header() {
                     type="password"
                     placeholder="At least 8 characters"
                     minLength={8}
+                    autoComplete={
+                      modal === "login"
+                        ? "current-password"
+                        : "new-password"
+                    }
                     required
                   />
                 </span>
               </label>
 
-              {modal === "signup" && (
-                <label>
-                  Account type
-                  <select name="role" defaultValue="user" required>
-                    <option value="user">
-                      Medicine finder / Customer
-                    </option>
-                    <option value="pharmacy">
-                      Pharmacy owner
-                    </option>
-                  </select>
-                </label>
-              )}
+              <label>
+                Account type
+                <select
+                  value={accountType}
+                  onChange={(event) =>
+                    setAccountType(event.target.value)
+                  }
+                  required
+                >
+                  <option value="user">Customer / Medicine finder</option>
+                  <option value="pharmacy">Pharmacy owner</option>
+                </select>
+              </label>
 
-              <button className="auth-submit-button" type="submit">
-                {modal === "login"
-                  ? "Login to Pharma"
-                  : "Create account"}
-                <ArrowRight size={17} />
+              <button
+                className="auth-submit-button"
+                type="submit"
+                disabled={loading}
+              >
+                {loading
+                  ? "Please wait..."
+                  : modal === "login"
+                    ? "Login to Pharma"
+                    : accountType === "pharmacy"
+                      ? "Continue to pharmacy registration"
+                      : "Create account"}
+
+                {!loading && <ArrowRight size={17} />}
               </button>
 
               {message && (
-                <p className="auth-message" role="status">
+                <p className="auth-message" role="alert">
                   {message}
                 </p>
               )}

@@ -214,3 +214,22 @@
   background: #12806a;
   color: white;
 }
+```css
+.header-user-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #24352c;
+  font-size: 14px;
+  font-weight: 600;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auth-submit-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+```
