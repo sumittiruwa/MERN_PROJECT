@@ -1,0 +1,224 @@
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  font-family: 'DM Sans', sans-serif;
+  color: #202b3c;
+  background: #f6f8fc;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  font-optical-sizing: auto;
+  font-weight: 400;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid #5583ec; outline-offset: 2px; }
+
+.app-shell { min-height: 100vh; }
+.sidebar {
+  width: 255px;
+  background: #fff;
+  border-right: 1px solid #e9edf4;
+  position: fixed;
+  inset: 0 auto 0 0;
+  display: flex;
+  flex-direction: column;
+  padding: 27px 18px 18px;
+  z-index: 10;
+}
+.brand { display: flex; align-items: center; gap: 11px; padding: 0 8px 37px; }
+.brand-mark {
+  width: 43px; height: 43px; border-radius: 13px;
+  display: grid; place-items: center;
+  color: white; background: #34785f;
+  box-shadow: 0 5px 12px #34785f30;
+}
+.brand strong { display: block; font: 800 25px Manrope, sans-serif; letter-spacing: -1px; }
+.brand strong span { color: #3d9872; }
+.brand small { display: block; margin-top: 1px; color: #9ba5b4; font-size: 8px; letter-spacing: 1.1px; }
+.sidebar-label { color: #a0a8b6; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; padding: 0 12px 13px; }
+.nav-menu { display: grid; gap: 6px; }
+.nav-item {
+  display: flex; align-items: center; gap: 13px; width: 100%;
+  padding: 12px 13px; border: 0; border-radius: 9px;
+  color: #788496; background: transparent; text-align: left;
+  font-size: 13px; font-weight: 600; transition: .2s;
+}
+.nav-item:hover { background: #f4f7f6; color: #34785f; }
+.nav-item.active { background: #eaf5ef; color: #267451; font-weight: 700; }
+.nav-count { margin-left: auto; background: #fff; border-radius: 6px; padding: 3px 7px; font-size: 11px; }
+.sidebar-help { margin-top: auto; padding: 18px 15px; background: #f5f8f6; border: 1px solid #eaf0eb; border-radius: 12px; }
+.help-icon { color: #34785f; margin-bottom: 10px; }
+.sidebar-help strong { font-size: 13px; }
+.sidebar-help p { font-size: 11px; line-height: 1.6; color: #8993a2; }
+.sidebar-help button { border: 0; padding: 0; background: none; color: #34785f; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+.profile { display: flex; align-items: center; gap: 10px; padding: 18px 3px 0; margin-top: 18px; border-top: 1px solid #edf0f4; }
+.avatar, .header-avatar { display: grid; place-items: center; width: 37px; height: 37px; border-radius: 50%; background: #dfeee5; color: #28714f; font-weight: 800; }
+.profile-info { min-width: 0; flex: 1; }
+.profile-info strong, .profile-info span { display: block; }
+.profile-info strong { font-size: 11px; }
+.profile-info span { color: #98a1af; font-size: 9px; margin-top: 4px; }
+.icon-button { display: inline-grid; place-items: center; border: 0; border-radius: 8px; background: transparent; color: #8b96a6; padding: 7px; }
+.icon-button:hover { color: #34785f; background: #eef5f0; }
+.mobile-close, .menu-toggle { display: none; }
+
+.main-area { margin-left: 255px; min-height: 100vh; display: flex; flex-direction: column; }
+.topbar {
+  height: 91px; padding: 0 35px; display: flex; align-items: center;
+  justify-content: space-between; gap: 18px; background: #fff;
+  border-bottom: 1px solid #e9edf4;
+}
+.topbar-left, .topbar-actions { display: flex; align-items: center; gap: 16px; }
+.breadcrumb { color: #9aa4b2; font-size: 11px; margin-bottom: 5px; }
+.breadcrumb span { padding: 0 7px; color: #c4cad3; }
+.topbar h1 { margin: 0; font: 800 22px Manrope, sans-serif; letter-spacing: -.6px; }
+.topbar-actions { gap: 19px; }
+.header-search, .search-box { display: flex; align-items: center; gap: 9px; background: #f6f8fb; border: 1px solid #edf0f4; color: #9aa4b3; border-radius: 8px; padding: 0 12px; }
+.header-search { width: 230px; height: 39px; }
+.header-search input, .search-box input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: #354154; font-size: 11px; }
+.header-search input::placeholder, .search-box input::placeholder { color: #a3adba; }
+.notification-button { position: relative; display: grid; place-items: center; width: 37px; height: 37px; border: 1px solid #edf0f4; border-radius: 9px; background: white; color: #778496; }
+.notification-button span { position: absolute; right: 8px; top: 7px; width: 6px; height: 6px; background: #ec8d64; border-radius: 50%; border: 1px solid white; }
+.header-avatar { width: 36px; height: 36px; font-size: 13px; }
+
+.page-content { padding: 29px 35px 32px; flex: 1; max-width: 1700px; width: 100%; margin: 0 auto; }
+.welcome-banner {
+  position: relative; overflow: hidden; display: flex; justify-content: space-between;
+  align-items: center; min-height: 151px; padding: 25px 31px;
+  border-radius: 14px; background: linear-gradient(110deg, #e8f4ec 0%, #edf6f1 65%, #e2f0e8 100%);
+  border: 1px solid #dfede4;
+}
+.eyebrow { color: #4b9873; font-size: 9px; font-weight: 800; letter-spacing: 1.6px; }
+.welcome-banner h2 { margin: 10px 0 6px; font: 800 27px Manrope, sans-serif; letter-spacing: -1px; }
+.welcome-banner h2 span { color: #3e9971; font-size: 20px; }
+.welcome-banner p { color: #7c8d84; margin: 0; font-size: 12px; }
+.banner-illustration { width: 106px; height: 106px; display: grid; place-items: center; color: #4c9a75; background: #ffffff8a; border-radius: 28px; transform: rotate(-9deg); margin-right: 25px; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 17px; margin: 24px 0; }
+.stat-card, .table-card, .pharmacy-card { background: #fff; border: 1px solid #e9edf4; border-radius: 12px; }
+.stat-card { padding: 19px 19px 17px; min-width: 0; }
+.stat-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #8490a1; font-size: 11px; font-weight: 600; }
+.stat-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0; }
+.stat-icon.purple { color: #8372d8; background: #f0edff; }
+.stat-icon.blue { color: #578ed7; background: #eaf3ff; }
+.stat-icon.orange { color: #d99143; background: #fff3e4; }
+.stat-icon.red { color: #dc7777; background: #fff0ef; }
+.stat-card h3 { margin: 14px 0 8px; font: 800 28px Manrope, sans-serif; letter-spacing: -.8px; }
+.stat-note { display: flex; align-items: center; gap: 5px; color: #9aa4b2; font-size: 10px; }
+.stat-note svg { color: #4ca57a; }
+.stat-note.warning-text { color: #d58c43; }
+
+.dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(260px, 1fr); gap: 19px; margin-bottom: 22px; }
+.table-card { overflow: hidden; min-width: 0; }
+.table-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 21px; }
+.table-toolbar h3 { margin: 0 0 5px; font-size: 13px; font-weight: 800; }
+.table-toolbar span { color: #a0a8b5; font-size: 10px; }
+.text-button { display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; color: #34785f; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.table-scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; text-align: left; white-space: nowrap; }
+thead { background: #f8fafc; }
+th { padding: 12px 18px; color: #9aa4b2; font-size: 9px; font-weight: 700; }
+td { padding: 13px 18px; border-bottom: 1px solid #f0f2f6; color: #7d8899; font-size: 10px; }
+tbody tr:last-child td { border-bottom: 0; }
+td strong { color: #344154; font-size: 10px; }
+.medicine-name { display: flex; align-items: center; gap: 10px; }
+.medicine-icon { display: grid; place-items: center; width: 31px; height: 31px; flex-shrink: 0; border-radius: 8px; color: #4d9a77; background: #edf7f0; }
+.status { display: inline-block; border-radius: 5px; padding: 5px 8px; font-size: 9px; font-weight: 700; }
+.status-in-stock { color: #31825c; background: #eaf6ee; }
+.status-low-stock { color: #c78330; background: #fff4e5; }
+.status-out-of-stock { color: #d36c6c; background: #fff0ef; }
+.search-box { width: 175px; height: 34px; }
+.search-box input { font-size: 10px; }
+.empty-state { text-align: center; padding: 28px; }
+.alert-bell { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; color: #d48b3c; background: #fff4e5; }
+.alert-item { display: flex; align-items: center; gap: 11px; padding: 12px 20px; border-top: 1px solid #f0f2f6; }
+.alert-symbol { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; color: #d08b3f; background: #fff5e8; flex-shrink: 0; }
+.alert-item strong { display: block; color: #455064; font-size: 11px; }
+.alert-item p { margin: 4px 0 0; color: #a0a8b5; font-size: 10px; }
+
+.pharmacies-preview { margin-top: 22px; }
+.pharmacy-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; padding: 0 20px 20px; }
+.pharmacy-card { padding: 17px; transition: transform .2s, box-shadow .2s; }
+.pharmacy-card:hover { transform: translateY(-2px); box-shadow: 0 7px 22px #233c3210; }
+.pharmacy-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 15px; }
+.pharmacy-symbol { display: grid; place-items: center; width: 41px; height: 41px; border-radius: 11px; background: #edf7f0; color: #438b67; }
+.pharmacy-card h3 { font-size: 12px; margin: 0 0 9px; }
+.pharmacy-card p { display: flex; align-items: flex-start; gap: 5px; margin: 0; color: #9aa4b2; font-size: 10px; line-height: 1.5; }
+.pharmacy-card p svg { flex-shrink: 0; }
+.pharmacy-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 13px; margin-top: 14px; border-top: 1px solid #f0f2f6; color: #718071; font-size: 10px; }
+.pharmacy-footer svg { color: #3e8b67; }
+
+.section-heading { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 23px; }
+.section-heading h2 { margin: 0 0 7px; font: 800 21px Manrope, sans-serif; }
+.section-heading p { margin: 0; color: #929cab; font-size: 12px; }
+.primary-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 8px; padding: 11px 15px; background: #34785f; color: #fff; font-size: 11px; font-weight: 700; box-shadow: 0 3px 8px #34785f22; }
+.primary-button:hover { background: #28664e; }
+.add-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; padding: 20px; border: 1px solid #e6ece8; border-radius: 12px; background: #fff; }
+.add-form input { width: 100%; padding: 12px; border: 1px solid #e2e7ed; border-radius: 7px; outline: 0; font-size: 12px; }
+.add-form input:focus { border-color: #65a787; }
+.add-form .primary-button { min-height: 39px; }
+.empty-panel { min-height: 310px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #fff; border: 1px solid #e9edf4; border-radius: 13px; color: #438b67; }
+.empty-panel h2 { margin: 16px 0 8px; color: #2e3a4c; }
+.empty-panel p { color: #98a2b0; font-size: 12px; }
+.footer { display: flex; justify-content: space-between; gap: 15px; padding: 19px 35px; border-top: 1px solid #e9edf4; color: #a0a8b5; font-size: 10px; }
+.footer-heart { color: #d97d7d; }
+.mobile-overlay { display: none; }
+
+@media (max-width: 1200px) {
+  .sidebar { width: 225px; }
+  .main-area { margin-left: 225px; }
+  .page-content { padding: 25px 22px; }
+  .topbar { padding: 0 22px; }
+  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .alerts-card { min-width: 0; }
+}
+
+@media (max-width: 760px) {
+  .sidebar { transform: translateX(-100%); transition: transform .25s ease; width: 265px; box-shadow: 12px 0 30px #142a1d0c; }
+  .sidebar.sidebar-open { transform: translateX(0); }
+  .mobile-overlay { display: block; position: fixed; inset: 0; z-index: 9; background: #15251c66; border: 0; }
+  .mobile-close, .menu-toggle { display: inline-grid; }
+  .brand { position: relative; }
+  .mobile-close { margin-left: auto; }
+  .main-area { margin-left: 0; }
+  .topbar { height: 76px; padding: 0 15px; }
+  .topbar-left { gap: 8px; }
+  .topbar h1 { font-size: 18px; }
+  .topbar-actions { gap: 8px; }
+  .header-search { display: none; }
+  .page-content { padding: 20px 14px; }
+  .welcome-banner { min-height: 135px; padding: 20px; }
+  .welcome-banner h2 { font-size: 23px; }
+  .welcome-banner p { max-width: 230px; line-height: 1.6; }
+  .banner-illustration { width: 65px; height: 65px; margin-right: 0; border-radius: 18px; }
+  .banner-illustration svg { width: 42px; }
+  .stats-grid { gap: 11px; margin: 17px 0; }
+  .stat-card { padding: 14px; }
+  .stat-top { font-size: 10px; }
+  .stat-icon { width: 32px; height: 32px; }
+  .stat-card h3 { font-size: 24px; }
+  .dashboard-grid { gap: 15px; }
+  .table-toolbar { padding: 16px; flex-wrap: wrap; }
+  .table-toolbar h3 { font-size: 12px; }
+  .pharmacy-grid { grid-template-columns: 1fr; padding: 0 14px 14px; }
+  .section-heading h2 { font-size: 18px; }
+  .section-heading p { font-size: 11px; }
+  .primary-button { padding: 10px 11px; font-size: 10px; }
+  .add-form { grid-template-columns: 1fr; padding: 14px; }
+  .footer { padding: 16px; flex-wrap: wrap; }
+}
+
+@media (max-width: 390px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .stat-card { display: flex; align-items: center; justify-content: space-between; }
+  .stat-card h3 { margin: 0; }
+  .stat-note { display: none; }
+  .welcome-banner h2 { font-size: 21px; }
+  .banner-illustration { display: none; }
+  .section-heading { align-items: flex-start; }
+}
